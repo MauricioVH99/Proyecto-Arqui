@@ -9,7 +9,6 @@
 	.eabi_attribute 30, 6
 	.eabi_attribute 34, 1
 	.eabi_attribute 18, 4
-	.file	"BaseC.c"
 	.text
 	.section	.rodata
 	.align	2
