@@ -1,412 +1,420 @@
+	.arch armv6
+	.eabi_attribute 28, 1
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 6
+	.eabi_attribute 34, 1
+	.eabi_attribute 18, 4
 	.file	"BaseC.c"
 	.text
 	.section	.rodata
+	.align	2
 .LC0:
-	.string	"Ingrese el numero decimal, N="
+	.ascii	"Ingrese el numero decimal, N=\000"
+	.align	2
 .LC1:
-	.string	"%i"
+	.ascii	"%i\000"
+	.align	2
 .LC2:
-	.string	"Ingrese la nueva base, b="
+	.ascii	"Ingrese la nueva base, b=\000"
 	.text
-	.globl	main
-	.type	main, @function
+	.align	2
+	.global	main
+	.arch armv6
+	.syntax unified
+	.arm
+	.fpu vfp
+	.type	main, %function
 main:
-.LFB6:
-	.cfi_startproc
-	endbr64
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$16, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
-	leaq	.LC0(%rip), %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	leaq	-16(%rbp), %rax
-	movq	%rax, %rsi
-	leaq	.LC1(%rip), %rdi
-	movl	$0, %eax
-	call	__isoc99_scanf@PLT
-	leaq	.LC2(%rip), %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	leaq	-12(%rbp), %rax
-	movq	%rax, %rsi
-	leaq	.LC1(%rip), %rdi
-	movl	$0, %eax
-	call	__isoc99_scanf@PLT
-	movl	-12(%rbp), %edx
-	movl	-16(%rbp), %eax
-	movl	%edx, %esi
-	movl	%eax, %edi
-	call	converto
-	movl	$0, %eax
-	movq	-8(%rbp), %rcx
-	xorq	%fs:40, %rcx
-	je	.L3
-	call	__stack_chk_fail@PLT
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	push	{fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #8
+	ldr	r0, .L3
+	bl	printf
+	sub	r3, fp, #8
+	mov	r1, r3
+	ldr	r0, .L3+4
+	bl	__isoc99_scanf
+	ldr	r0, .L3+8
+	bl	printf
+	sub	r3, fp, #12
+	mov	r1, r3
+	ldr	r0, .L3+4
+	bl	__isoc99_scanf
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-12]
+	mov	r1, r2
+	mov	r0, r3
+	bl	converto
+	mov	r3, #0
+	mov	r0, r3
+	sub	sp, fp, #4
+	@ sp needed
+	pop	{fp, pc}
+.L4:
+	.align	2
 .L3:
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE6:
+	.word	.LC0
+	.word	.LC1
+	.word	.LC2
 	.size	main, .-main
+	.global	__aeabi_idiv
+	.global	__aeabi_idivmod
 	.section	.rodata
+	.align	2
 .LC3:
-	.string	"(%i)_10=(%s)_%i \n"
+	.ascii	"(%i)_10=(%s)_%i \012\000"
 	.text
-	.globl	converto
-	.type	converto, @function
+	.align	2
+	.global	converto
+	.syntax unified
+	.arm
+	.fpu vfp
+	.type	converto, %function
 converto:
-.LFB7:
-	.cfi_startproc
-	endbr64
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$48, %rsp
-	movl	%edi, -36(%rbp)
-	movl	%esi, -40(%rbp)
-	cvtsi2sdl	-36(%rbp), %xmm0
-	call	log@PLT
-	movsd	%xmm0, -48(%rbp)
-	cvtsi2sdl	-40(%rbp), %xmm0
-	call	log@PLT
-	movsd	-48(%rbp), %xmm2
-	divsd	%xmm0, %xmm2
-	movapd	%xmm2, %xmm0
-	cvttsd2sil	%xmm0, %eax
-	movl	%eax, -20(%rbp)
-	movl	-20(%rbp), %eax
-	addl	$1, %eax
-	cltq
-	movq	%rax, %rdi
-	call	malloc@PLT
-	movq	%rax, -8(%rbp)
-	movl	$0, -24(%rbp)
-	jmp	.L5
-.L39:
-	movl	-20(%rbp), %eax
-	subl	-24(%rbp), %eax
-	cvtsi2sdl	%eax, %xmm1
-	cvtsi2sdl	-40(%rbp), %xmm0
-	call	pow@PLT
-	cvttsd2sil	%xmm0, %eax
-	movl	%eax, -16(%rbp)
-	movl	-36(%rbp), %eax
-	cltd
-	idivl	-16(%rbp)
-	cltd
-	idivl	-40(%rbp)
-	movl	%edx, -12(%rbp)
-	cmpl	$30, -12(%rbp)
-	ja	.L6
-	movl	-12(%rbp), %eax
-	leaq	0(,%rax,4), %rdx
-	leaq	.L8(%rip), %rax
-	movl	(%rdx,%rax), %eax
-	cltq
-	leaq	.L8(%rip), %rdx
-	addq	%rdx, %rax
-	notrack jmp	*%rax
-	.section	.rodata
-	.align 4
-	.align 4
-.L8:
-	.long	.L38-.L8
-	.long	.L37-.L8
-	.long	.L36-.L8
-	.long	.L35-.L8
-	.long	.L34-.L8
-	.long	.L33-.L8
-	.long	.L32-.L8
-	.long	.L31-.L8
-	.long	.L30-.L8
-	.long	.L29-.L8
-	.long	.L28-.L8
-	.long	.L27-.L8
-	.long	.L26-.L8
-	.long	.L25-.L8
-	.long	.L24-.L8
-	.long	.L23-.L8
-	.long	.L22-.L8
-	.long	.L21-.L8
-	.long	.L20-.L8
-	.long	.L19-.L8
-	.long	.L18-.L8
-	.long	.L17-.L8
-	.long	.L16-.L8
-	.long	.L15-.L8
-	.long	.L14-.L8
-	.long	.L13-.L8
-	.long	.L12-.L8
-	.long	.L11-.L8
-	.long	.L10-.L8
-	.long	.L9-.L8
-	.long	.L7-.L8
-	.text
-.L38:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$48, (%rax)
-	jmp	.L6
-.L37:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$49, (%rax)
-	jmp	.L6
-.L36:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$50, (%rax)
-	jmp	.L6
-.L35:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$51, (%rax)
-	jmp	.L6
-.L34:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$52, (%rax)
-	jmp	.L6
-.L33:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$53, (%rax)
-	jmp	.L6
-.L32:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$54, (%rax)
-	jmp	.L6
-.L31:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$55, (%rax)
-	jmp	.L6
-.L30:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$56, (%rax)
-	jmp	.L6
-.L29:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$57, (%rax)
-	jmp	.L6
-.L28:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$65, (%rax)
-	jmp	.L6
-.L27:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$66, (%rax)
-	jmp	.L6
-.L26:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$67, (%rax)
-	jmp	.L6
-.L25:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$68, (%rax)
-	jmp	.L6
-.L24:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$69, (%rax)
-	jmp	.L6
-.L23:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$70, (%rax)
-	jmp	.L6
-.L22:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$71, (%rax)
-	jmp	.L6
-.L21:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$72, (%rax)
-	jmp	.L6
-.L20:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$73, (%rax)
-	jmp	.L6
-.L19:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$74, (%rax)
-	jmp	.L6
-.L18:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$75, (%rax)
-	jmp	.L6
-.L17:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$76, (%rax)
-	jmp	.L6
-.L16:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$77, (%rax)
-	jmp	.L6
-.L15:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$78, (%rax)
-	jmp	.L6
-.L14:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$79, (%rax)
-	jmp	.L6
-.L13:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$80, (%rax)
-	jmp	.L6
-.L12:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$81, (%rax)
-	jmp	.L6
-.L11:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$82, (%rax)
-	jmp	.L6
-.L10:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$83, (%rax)
-	jmp	.L6
+	@ args = 0, pretend = 0, frame = 32
+	@ frame_needed = 1, uses_anonymous_args = 0
+	push	{fp, lr}
+	vpush.64	{d8}
+	add	fp, sp, #12
+	sub	sp, sp, #32
+	str	r0, [fp, #-40]
+	str	r1, [fp, #-44]
+	ldr	r3, [fp, #-40]
+	vmov	s15, r3	@ int
+	vcvt.f64.s32	d7, s15
+	vmov.f64	d0, d7
+	bl	log
+	vmov.f64	d8, d0
+	ldr	r3, [fp, #-44]
+	vmov	s15, r3	@ int
+	vcvt.f64.s32	d7, s15
+	vmov.f64	d0, d7
+	bl	log
+	vmov.f64	d6, d0
+	vdiv.f64	d7, d8, d6
+	vcvt.s32.f64	s15, d7
+	vmov	r3, s15	@ int
+	str	r3, [fp, #-20]
+	ldr	r3, [fp, #-20]
+	add	r3, r3, #1
+	mov	r0, r3
+	bl	malloc
+	mov	r3, r0
+	str	r3, [fp, #-24]
+	mov	r3, #0
+	str	r3, [fp, #-16]
+	b	.L6
+.L40:
+	ldr	r3, [fp, #-44]
+	vmov	s15, r3	@ int
+	vcvt.f64.s32	d7, s15
+	ldr	r2, [fp, #-20]
+	ldr	r3, [fp, #-16]
+	sub	r3, r2, r3
+	vmov	s13, r3	@ int
+	vcvt.f64.s32	d6, s13
+	vmov.f64	d1, d6
+	vmov.f64	d0, d7
+	bl	pow
+	vmov.f64	d7, d0
+	vcvt.s32.f64	s15, d7
+	vmov	r3, s15	@ int
+	str	r3, [fp, #-28]
+	ldr	r1, [fp, #-28]
+	ldr	r0, [fp, #-40]
+	bl	__aeabi_idiv
+	mov	r3, r0
+	ldr	r1, [fp, #-44]
+	mov	r0, r3
+	bl	__aeabi_idivmod
+	mov	r3, r1
+	str	r3, [fp, #-32]
+	ldr	r3, [fp, #-32]
+	cmp	r3, #30
+	ldrls	pc, [pc, r3, asl #2]
+	b	.L7
 .L9:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$84, (%rax)
-	jmp	.L6
-.L7:
-	movl	-24(%rbp), %eax
-	movslq	%eax, %rdx
-	movq	-8(%rbp), %rax
-	addq	%rdx, %rax
-	movb	$85, (%rax)
+	.word	.L39
+	.word	.L38
+	.word	.L37
+	.word	.L36
+	.word	.L35
+	.word	.L34
+	.word	.L33
+	.word	.L32
+	.word	.L31
+	.word	.L30
+	.word	.L29
+	.word	.L28
+	.word	.L27
+	.word	.L26
+	.word	.L25
+	.word	.L24
+	.word	.L23
+	.word	.L22
+	.word	.L21
+	.word	.L20
+	.word	.L19
+	.word	.L18
+	.word	.L17
+	.word	.L16
+	.word	.L15
+	.word	.L14
+	.word	.L13
+	.word	.L12
+	.word	.L11
+	.word	.L10
+	.word	.L8
+.L39:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #48
+	strb	r2, [r3]
+	b	.L7
+.L38:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #49
+	strb	r2, [r3]
+	b	.L7
+.L37:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #50
+	strb	r2, [r3]
+	b	.L7
+.L36:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #51
+	strb	r2, [r3]
+	b	.L7
+.L35:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #52
+	strb	r2, [r3]
+	b	.L7
+.L34:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #53
+	strb	r2, [r3]
+	b	.L7
+.L33:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #54
+	strb	r2, [r3]
+	b	.L7
+.L32:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #55
+	strb	r2, [r3]
+	b	.L7
+.L31:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #56
+	strb	r2, [r3]
+	b	.L7
+.L30:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #57
+	strb	r2, [r3]
+	b	.L7
+.L29:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #65
+	strb	r2, [r3]
+	b	.L7
+.L28:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #66
+	strb	r2, [r3]
+	b	.L7
+.L27:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #67
+	strb	r2, [r3]
+	b	.L7
+.L26:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #68
+	strb	r2, [r3]
+	b	.L7
+.L25:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #69
+	strb	r2, [r3]
+	b	.L7
+.L24:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #70
+	strb	r2, [r3]
+	b	.L7
+.L23:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #71
+	strb	r2, [r3]
+	b	.L7
+.L22:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #72
+	strb	r2, [r3]
+	b	.L7
+.L21:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #73
+	strb	r2, [r3]
+	b	.L7
+.L20:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #74
+	strb	r2, [r3]
+	b	.L7
+.L19:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #75
+	strb	r2, [r3]
+	b	.L7
+.L18:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #76
+	strb	r2, [r3]
+	b	.L7
+.L17:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #77
+	strb	r2, [r3]
+	b	.L7
+.L16:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #78
+	strb	r2, [r3]
+	b	.L7
+.L15:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #79
+	strb	r2, [r3]
+	b	.L7
+.L14:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #80
+	strb	r2, [r3]
+	b	.L7
+.L13:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #81
+	strb	r2, [r3]
+	b	.L7
+.L12:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #82
+	strb	r2, [r3]
+	b	.L7
+.L11:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #83
+	strb	r2, [r3]
+	b	.L7
+.L10:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #84
+	strb	r2, [r3]
+	b	.L7
+.L8:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	mov	r2, #85
+	strb	r2, [r3]
 	nop
+.L7:
+	ldr	r3, [fp, #-16]
+	add	r3, r3, #1
+	str	r3, [fp, #-16]
 .L6:
-	addl	$1, -24(%rbp)
-.L5:
-	movl	-24(%rbp), %eax
-	cmpl	-20(%rbp), %eax
-	jle	.L39
-	movl	-40(%rbp), %ecx
-	movq	-8(%rbp), %rdx
-	movl	-36(%rbp), %eax
-	movl	%eax, %esi
-	leaq	.LC3(%rip), %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdi
-	call	free@PLT
-	movl	$0, %eax
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE7:
+	ldr	r2, [fp, #-16]
+	ldr	r3, [fp, #-20]
+	cmp	r2, r3
+	ble	.L40
+	ldr	r3, [fp, #-44]
+	ldr	r2, [fp, #-24]
+	ldr	r1, [fp, #-40]
+	ldr	r0, .L42
+	bl	printf
+	ldr	r0, [fp, #-24]
+	bl	free
+	mov	r3, #0
+	mov	r0, r3
+	sub	sp, fp, #12
+	@ sp needed
+	vldm	sp!, {d8}
+	pop	{fp, pc}
+.L43:
+	.align	2
+.L42:
+	.word	.LC3
 	.size	converto, .-converto
-	.ident	"GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0"
-	.section	.note.GNU-stack,"",@progbits
-	.section	.note.gnu.property,"a"
-	.align 8
-	.long	 1f - 0f
-	.long	 4f - 1f
-	.long	 5
-0:
-	.string	 "GNU"
-1:
-	.align 8
-	.long	 0xc0000002
-	.long	 3f - 2f
-2:
-	.long	 0x3
-3:
-	.align 8
-4:
+	.ident	"GCC: (Raspbian 8.3.0-6+rpi1) 8.3.0"
+	.section	.note.GNU-stack,"",%progbits
